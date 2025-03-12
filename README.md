@@ -2,22 +2,23 @@
 
 Upstream: https://gitlab.com/gnuwget/wget2/
 
-### Build the image:
+### Build the image locally
 
 ```bash
-docker build --build-arg VERSION=${VERSION:-2.1.0} -t rytiszig/wget2:${VERSION:-2.1.0} -t rytiszig/wget2:latest ./
+git clone https://github.com/rytiszig/docker-wget2.git
+docker buildx build -t rytiszig/wget2:latest --load .
 ```
 
 ### Run the image:
 
 ```bash
-docker run --rm rytiszig/wget2:${VERSION:-latest}
+docker run --rm rytiszig/wget2 --version
 ```
 
-### Push the image to Docker Hub:
+### Build specific version && push to Docker Hub:
 
 ```bash
+VERSION=v2.1.0
 docker login
-docker push rytiszig/wget2:${VERSION:-latest}
-docker push rytiszig/wget2:latest
+docker buildx build --platform linux/amd64,linux/arm64 --build-arg VERSION=${VERSION#v} -t rytiszig/wget2:$VERSION -t rytiszig/wget2:latest ./ --push
 ```
